@@ -21,6 +21,10 @@ class NumberHelper
             return 'seribu ' . self::terbilang($angka - 1000);
         elseif ($angka < 1000000)
             return self::terbilang(intval($angka / 1000)) . ' ribu ' . self::terbilang($angka % 1000);
+        elseif ($angka < 1000000000)
+            return self::terbilang(intval($angka / 1000000)) . ' juta ' . self::terbilang($angka % 1000);
+        elseif ($angka < 1000000000000)
+            return self::terbilang(intval($angka / 1000000000)) . ' milyar ' . self::terbilang($angka % 1000);
         else
             return 'Angka terlalu besar';
     }
