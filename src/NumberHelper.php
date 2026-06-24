@@ -5,29 +5,54 @@ namespace Rahfan\PhpUtils;
 class NumberHelper
 {
     public static function terbilang(int $angka): string
-{
-    $huruf = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"];
+    {
+        if ($angka === 0) {
+            return 'nol';
+        }
 
-    if ($angka < 12)
-        return $huruf[$angka];
-    elseif ($angka < 20)
-        return self::terbilang($angka - 10) . ' belas';
-    elseif ($angka < 100)
-        return self::terbilang(intval($angka / 10)) . ' puluh ' . self::terbilang($angka % 10);
-    elseif ($angka < 200)
-        return 'seratus ' . self::terbilang($angka - 100);
-    elseif ($angka < 1000)
-        return self::terbilang(intval($angka / 100)) . ' ratus ' . self::terbilang($angka % 100);
-    elseif ($angka < 2000)
-        return 'seribu ' . self::terbilang($angka - 1000);
-    elseif ($angka < 1000000)
-        return self::terbilang(intval($angka / 1000)) . ' ribu ' . self::terbilang($angka % 1000);
-    elseif ($angka < 1000000000)
-        return self::terbilang(intval($angka / 1000000)) . ' juta ' . self::terbilang($angka % 1000000);
-    elseif ($angka < 1000000000000)
-        return self::terbilang(intval($angka / 1000000000)) . ' milyar ' . self::terbilang($angka % 1000000000);
-    else
-        return 'Angka terlalu besar';
-}
+        return self::terbilangRecursive($angka);
+    }
+
+    private static function terbilangRecursive(int $angka): string
+    {
+        if ($angka === 0) {
+            return '';
+        }
+
+        if ($angka < 0) {
+            return 'minus ' . self::terbilangRecursive(abs($angka));
+        }
+
+        $huruf = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"];
+        $hasil = '';
+
+        if ($angka < 12) {
+            $hasil = $huruf[$angka];
+        } elseif ($angka < 20) {
+            $hasil = self::terbilangRecursive($angka - 10) . ' belas';
+        } elseif ($angka < 100) {
+            $hasil = self::terbilangRecursive(intval($angka / 10)) . ' puluh ' . self::terbilangRecursive($angka % 10);
+        } elseif ($angka < 200) {
+            $hasil = 'seratus ' . self::terbilangRecursive($angka - 100);
+        } elseif ($angka < 1000) {
+            $hasil = self::terbilangRecursive(intval($angka / 100)) . ' ratus ' . self::terbilangRecursive($angka % 100);
+        } elseif ($angka < 2000) {
+            $hasil = 'seribu ' . self::terbilangRecursive($angka - 1000);
+        } elseif ($angka < 1000000) {
+            $hasil = self::terbilangRecursive(intval($angka / 1000)) . ' ribu ' . self::terbilangRecursive($angka % 1000);
+        } elseif ($angka < 1000000000) {
+            $hasil = self::terbilangRecursive(intval($angka / 1000000)) . ' juta ' . self::terbilangRecursive($angka % 1000000);
+        } elseif ($angka < 1000000000000) {
+            $hasil = self::terbilangRecursive(intval($angka / 1000000000)) . ' miliar ' . self::terbilangRecursive($angka % 1000000000);
+        } elseif ($angka < 1000000000000000) {
+            $hasil = self::terbilangRecursive(intval($angka / 1000000000000)) . ' triliun ' . self::terbilangRecursive($angka % 1000000000000);
+        } elseif ($angka < 1000000000000000000) {
+            $hasil = self::terbilangRecursive(intval($angka / 1000000000000000)) . ' kuadriliun ' . self::terbilangRecursive($angka % 1000000000000000);
+        } else {
+            $hasil = self::terbilangRecursive(intval($angka / 1000000000000000000)) . ' kuintiliun ' . self::terbilangRecursive($angka % 1000000000000000000);
+        }
+
+        return trim(preg_replace('/\s+/', ' ', $hasil));
+    }
 
 }
