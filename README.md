@@ -72,15 +72,70 @@ Utilitas pemrosesan tanggal dan waktu:
 ---
 
 ### 2. `Rahfan\PhpUtils\NumberHelper`
-Utilitas konversi angka ke ucapan teks (terbilang):
+Utilitas pemrosesan, konversi kata (terbilang), dan pemformatan angka:
 
-- **`terbilang(int $angka): string`**
+- **`terbilang(int|float $angka, string $suffix = ''): string`**
+  Mengonversi angka ke teks Bahasa Indonesia. Mendukung bilangan bulat, negatif, desimal/pecahan, dan akhiran kata (suffix).
   ```php
   use Rahfan\PhpUtils\NumberHelper;
 
-  NumberHelper::terbilang(123); // "seratus dua puluh tiga"
   NumberHelper::terbilang(1500000); // "satu juta lima ratus ribu"
+  NumberHelper::terbilang(1500, 'rupiah'); // "seribu lima ratus rupiah"
+  NumberHelper::terbilang(15.5); // "lima belas koma lima"
   NumberHelper::terbilang(-50); // "minus lima puluh"
+  ```
+
+- **`formatRupiah(int|float $angka, bool $withSymbol = true, int $decimals = 0): string`**
+  Memformat angka ke mata uang Rupiah standar.
+  ```php
+  NumberHelper::formatRupiah(1500000); // "Rp 1.500.000"
+  NumberHelper::formatRupiah(1500000, withSymbol: false); // "1.500.000"
+  NumberHelper::formatRupiah(1500000.5, decimals: 2); // "Rp 1.500.000,50"
+  NumberHelper::formatRupiah(-25000); // "-Rp 25.000"
+  ```
+
+- **`formatRingkas(int|float $angka, int $precision = 1, string $style = 'id'): string`**
+  Memendekkan angka besar untuk visualisasi/dashboard (`style: 'id'` untuk `rb`/`jt`/`M`/`T`, atau `style: 'intl'` untuk `K`/`M`/`B`/`T`).
+  ```php
+  NumberHelper::formatRingkas(1500); // "1,5 rb"
+  NumberHelper::formatRingkas(1200000); // "1,2 jt"
+  NumberHelper::formatRingkas(2500000000); // "2,5 M"
+  NumberHelper::formatRingkas(1500, style: 'intl'); // "1.5K"
+  ```
+
+- **`toRoman(int $angka): string` & `fromRoman(string $roman): int`**
+  Konversi angka arab ke angka romawi dan sebaliknya (rentang 1 sampai 3999).
+  ```php
+  NumberHelper::toRoman(4); // "IV"
+  NumberHelper::toRoman(2026); // "MMXXVI"
+
+  NumberHelper::fromRoman('MMXXVI'); // 2026
+  NumberHelper::fromRoman('iv'); // 4
+  ```
+
+- **`formatPercent(int|float $angka, int $decimals = 1, bool $isDecimal = true): string`**
+  Memformat angka menjadi format persentase.
+  ```php
+  NumberHelper::formatPercent(0.755); // "75,5%"
+  NumberHelper::formatPercent(50, decimals: 0, isDecimal: false); // "50%"
+  ```
+
+- **`parse(string $input): int|float`**
+  Membersihkan string teks terformat menjadi tipe numerik (`int` atau `float`).
+  ```php
+  NumberHelper::parse('Rp 1.500.000'); // 1500000 (int)
+  NumberHelper::parse('Rp 1.500.000,50'); // 1500000.5 (float)
+  NumberHelper::parse('75,5%'); // 75.5 (float)
+  NumberHelper::parse('-Rp 25.000'); // -25000 (int)
+  ```
+
+- **`ordinal(int $angka, bool $asWord = false): string`**
+  Mengembalikan representasi tingkatan/urutan angka.
+  ```php
+  NumberHelper::ordinal(1); // "ke-1"
+  NumberHelper::ordinal(1, asWord: true); // "pertama"
+  NumberHelper::ordinal(2, asWord: true); // "kedua"
+  NumberHelper::ordinal(10, asWord: true); // "kesepuluh"
   ```
 
 ---
